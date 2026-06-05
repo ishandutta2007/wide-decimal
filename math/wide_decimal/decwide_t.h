@@ -894,16 +894,7 @@
     }
 
     // Move assignment operator.
-    auto operator=(decwide_t&& other) noexcept -> decwide_t&
-    {
-      my_data      = static_cast<representation_type&&>(other.my_data);
-      my_exp       = other.my_exp;
-      my_neg       = other.my_neg;
-      my_fpclass   = other.my_fpclass;
-      my_prec_elem = other.my_prec_elem;
-
-      return *this;
-    }
+    auto operator=(decwide_t&& other) noexcept -> decwide_t& = default;
 
     WIDE_DECIMAL_NODISCARD auto  representation()       noexcept ->       representation_type& { return my_data; }
     WIDE_DECIMAL_NODISCARD auto  representation() const noexcept -> const representation_type& { return my_data; }
