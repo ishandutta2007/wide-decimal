@@ -537,10 +537,10 @@
 
     static constexpr auto static_size() -> size_type { return MySize; }
 
-    explicit constexpr fixed_dynamic_array(const size_type         = size_type(),
+    explicit constexpr fixed_dynamic_array(const size_type       s = size_type(),
                                            const value_type&     v = value_type(),
                                            const allocator_type& a = allocator_type()) noexcept
-      : base_class_type(static_size(), v, a) { }
+      : base_class_type(static_size(), v, a) { static_cast<void>(s); }
 
     constexpr fixed_dynamic_array(const fixed_dynamic_array& other)
       : base_class_type(static_cast<const base_class_type&>(other)) { }

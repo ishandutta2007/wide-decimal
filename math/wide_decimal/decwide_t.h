@@ -2566,17 +2566,13 @@
       // Initialization from initializer list of limbs,
       // exponent value (normed to limb granularity)
       // and optional sign flag.
-      auto a = decwide_t { };
+      decwide_t a { };
 
       if(limb_values.size() < a.my_data.size())
       {
         std::copy(limb_values.begin(),
                   limb_values.end(),
                   a.my_data.begin());
-
-        std::fill(a.my_data.begin() + limb_values.size(),
-                  a.my_data.end(),
-                  static_cast<limb_type>(UINT8_C(0)));
       }
       else
       {
@@ -4299,6 +4295,10 @@
   #pragma GCC diagnostic pop
   #endif
 
+  #if ((defined(__GNUC__) && (__GNUC__ >= 12)) && !defined(__clang__))
+  #pragma GCC diagnostic push
+  #pragma GCC diagnostic ignored "-Wstringop-overread"
+  #endif
   template<const ::std::int32_t ParamDigitsBaseTen, typename LimbType, typename AllocatorType, typename InternalFloatType, typename ExponentType, typename FftFloatType>
   constexpr auto one() -> decwide_t<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>
   {
@@ -4309,6 +4309,9 @@
 
     return other_wide_decimal_type::from_lst( { static_cast<other_limb_type>(UINT8_C(1)) } );
   }
+  #if ((defined(__GNUC__) && (__GNUC__ >= 12)) && !defined(__clang__))
+  #pragma GCC diagnostic pop
+  #endif
 
   template<const ::std::int32_t ParamDigitsBaseTen, typename LimbType, typename AllocatorType, typename InternalFloatType, typename ExponentType, typename FftFloatType>
   constexpr auto two() -> decwide_t<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>
