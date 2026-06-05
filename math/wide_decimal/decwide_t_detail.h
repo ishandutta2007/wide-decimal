@@ -384,7 +384,7 @@
   }
   // LCOV_EXCL_STOP
 
-  auto pow10_maker_as_runtime_value(std::uint32_t n) noexcept -> std::uint32_t
+  inline auto pow10_maker_as_runtime_value(std::uint32_t n) noexcept -> std::uint32_t
   {
     using local_array_type = std::array<std::uint32_t, static_cast<std::size_t>(UINT8_C(10))>; // NOLINT(,cppcoreguidelines-avoid-magic-numbers,readability-magic-numbers)
 
@@ -535,7 +535,7 @@
     using typename base_class_type::reverse_iterator;
     using typename base_class_type::const_reverse_iterator;
 
-    static constexpr auto static_size() -> typename base_class_type::size_type { return MySize; }
+    static constexpr auto static_size() -> size_type { return MySize; }
 
     explicit constexpr fixed_dynamic_array(const size_type         = size_type(),
                                            const value_type&     v = value_type(),
@@ -545,12 +545,12 @@
     constexpr fixed_dynamic_array(const fixed_dynamic_array& other)
       : base_class_type(static_cast<const base_class_type&>(other)) { }
 
-    constexpr fixed_dynamic_array(std::initializer_list<typename base_class_type::value_type> lst,
+    constexpr fixed_dynamic_array(std::initializer_list<value_type> lst,
                         const allocator_type& a = allocator_type())
-      : base_class_type(static_size())
+      : base_class_type(static_size(), value_type(), a)
     {
       std::copy(lst.begin(),
-                lst.begin() + (std::min)(static_cast<typename base_class_type::size_type>(lst.size()), static_size()),
+                lst.begin() + (std::min)(static_cast<size_type>(lst.size()), static_size()),
                 base_class_type::begin());
     }
 
