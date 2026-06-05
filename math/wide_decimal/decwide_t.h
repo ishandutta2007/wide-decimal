@@ -1485,7 +1485,7 @@
               / nn
             );
 
-          my_data[index_prev] = val_prev;
+          my_data[index_prev] = val_prev; // NOLINT(cppcoreguidelines-pro-bounds-constant-array-index)
         }
       }
 
@@ -2528,7 +2528,7 @@
                      ++limb_index)
             {
               val *= static_cast<unsigned long long>(decwide_t_elem_mask);    // NOLINT(google-runtime-int)
-              val += static_cast<unsigned long long>(xn.my_data[limb_index]); // NOLINT(google-runtime-int)
+              val += static_cast<unsigned long long>(xn.my_data[limb_index]); // NOLINT(google-runtime-int,cppcoreguidelines-pro-bounds-constant-array-index)
             }
 
             unsigned_long_long_result = val;
