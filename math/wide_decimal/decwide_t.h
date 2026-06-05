@@ -863,7 +863,7 @@
         {
           const auto n = static_cast<limb_type>(d);
 
-          my_data[limb_index] = n;
+          my_data[limb_index] = n; // NOLINT(cppcoreguidelines-pro-bounds-constant-array-index)
 
           d -= static_cast<internal_float_type>(n);
           d *= static_cast<internal_float_type>(decwide_t_elem_mask);
@@ -2235,7 +2235,7 @@
                  limb_index < digit_loops_max; // NOLINT(altera-id-dependent-backward-branch)
                ++limb_index)
       {
-        mantissa += (static_cast<internal_float_type>(my_data[limb_index]) * scale);
+        mantissa += (static_cast<internal_float_type>(my_data[limb_index]) * scale); // NOLINT(cppcoreguidelines-pro-bounds-constant-array-index)
 
         scale /= static_cast<internal_float_type>(decwide_t_elem_mask);
       }
@@ -2467,7 +2467,7 @@
                     ++limb_index)
             {
               val *= static_cast<unsigned long long>(decwide_t_elem_mask);    // NOLINT(google-runtime-int)
-              val += static_cast<unsigned long long>(xn.my_data[limb_index]); // NOLINT(google-runtime-int)
+              val += static_cast<unsigned long long>(xn.my_data[limb_index]); // NOLINT(google-runtime-int,cppcoreguidelines-pro-bounds-constant-array-index)
             }
 
             signed_long_long_result = ((!b_neg) ? static_cast<signed long long>(val)                   // NOLINT(google-runtime-int)
@@ -3212,7 +3212,7 @@
         const auto round_digit_value =
           digit_helper_struct_type::digit_at_pos_in_limb
           (
-             my_data[static_cast<local_size_type>(round_digit_idx)],
+             my_data[static_cast<local_size_type>(round_digit_idx)], // NOLINT(cppcoreguidelines-pro-bounds-constant-array-index)
              static_cast<unsigned>(round_digit_pos)
           );
 
@@ -3220,13 +3220,13 @@
           detail::pow10_maker_as_runtime_value(static_cast<std::uint32_t>(least_digit_pos));
 
         // Clear the lower base-10 digits of the rounded element.
-        my_data[static_cast<local_size_type>(least_digit_idx)] =
+        my_data[static_cast<local_size_type>(least_digit_idx)] = // NOLINT(cppcoreguidelines-pro-bounds-constant-array-index)
           static_cast<local_limb_type>
           (
-              my_data[static_cast<local_size_type>(least_digit_idx)]
+              my_data[static_cast<local_size_type>(least_digit_idx)] // NOLINT(cppcoreguidelines-pro-bounds-constant-array-index)
             - static_cast<local_limb_type>
               (
-                  my_data[static_cast<local_size_type>(least_digit_idx)]
+                  my_data[static_cast<local_size_type>(least_digit_idx)] // NOLINT(cppcoreguidelines-pro-bounds-constant-array-index)
                 % static_cast<local_limb_type>(least_digit_p10)
               )
           );
@@ -3249,26 +3249,26 @@
         // Perform round-to-nearest with no tie-breaking whatsoever.
         if(round_digit_value >= static_cast<std::uint8_t>(UINT8_C(5)))
         {
-          my_data[static_cast<local_size_type>(least_digit_idx)] =
+          my_data[static_cast<local_size_type>(least_digit_idx)] = // NOLINT(cppcoreguidelines-pro-bounds-constant-array-index)
             static_cast<local_limb_type>
             (
-                my_data[static_cast<local_size_type>(least_digit_idx)]
+                my_data[static_cast<local_size_type>(least_digit_idx)] // NOLINT(cppcoreguidelines-pro-bounds-constant-array-index)
               + static_cast<local_limb_type>(least_digit_p10)
             );
 
           // There is a carry from rounding up.
           std::uint_fast8_t carry_out =
-            ((my_data[static_cast<local_size_type>(least_digit_idx)] >= decwide_t_elem_mask)
+            ((my_data[static_cast<local_size_type>(least_digit_idx)] >= decwide_t_elem_mask) // NOLINT(cppcoreguidelines-pro-bounds-constant-array-index)
               ? static_cast<std::uint_fast8_t>(UINT8_C(1))
               : static_cast<std::uint_fast8_t>(UINT8_C(0)));
 
           // Propagate the carry into the limbs of higher significance as needed.
           if(carry_out != static_cast<std::uint_fast8_t>(UINT8_C(0)))
           {
-            my_data[static_cast<local_size_type>(least_digit_idx)] =
+            my_data[static_cast<local_size_type>(least_digit_idx)] = // NOLINT(cppcoreguidelines-pro-bounds-constant-array-index)
               static_cast<limb_type>
               (
-                  my_data[static_cast<local_size_type>(least_digit_idx)]
+                  my_data[static_cast<local_size_type>(least_digit_idx)] // NOLINT(cppcoreguidelines-pro-bounds-constant-array-index)
                 - static_cast<limb_type>(decwide_t_elem_mask)
               );
 
@@ -3278,7 +3278,7 @@
               const auto tt =
                 static_cast<local_limb_type>
                 (
-                    my_data[static_cast<local_size_type>(least_digit_idx)]
+                    my_data[static_cast<local_size_type>(least_digit_idx)] // NOLINT(cppcoreguidelines-pro-bounds-constant-array-index)
                   + static_cast<local_limb_type>(carry_out)
                 );
 
@@ -3287,7 +3287,7 @@
 
               const auto has_carry = (carry_out != static_cast<std::uint_fast8_t>(UINT8_C(0)));
 
-              my_data[static_cast<local_size_type>(least_digit_idx)] =
+              my_data[static_cast<local_size_type>(least_digit_idx)] = // NOLINT(cppcoreguidelines-pro-bounds-constant-array-index)
                 static_cast<local_limb_type>
                 (
                     tt
@@ -3705,7 +3705,7 @@
 
         auto ptr_end = static_cast<char*>(nullptr); // NOLINT(cppcoreguidelines-pro-type-vararg,hicpp-vararg,llvm-qualified-auto,readability-qualified-auto)
 
-        my_data[i1] =
+        my_data[i1] = // NOLINT(cppcoreguidelines-pro-bounds-constant-array-index)
           static_cast<limb_type>
           (
             std::strtoul(str_next_limb.c_str(), &ptr_end, static_cast<int>(INT8_C(10)))
