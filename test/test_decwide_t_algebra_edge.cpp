@@ -1182,19 +1182,19 @@ auto test_string_ops_and_round_trips() -> bool
   }
 
   {
-    std::string str_zeros(std::string("000.000000"));
+    auto str_zeros { std::string("000.000000") };
 
     for(auto i = static_cast<unsigned>(UINT8_C(0)); i < static_cast<unsigned>(UINT8_C(16)); ++i)
     {
       const bool zero_is_neg { ((i % static_cast<unsigned>(UINT8_C(2))) != static_cast<unsigned>(UINT8_C(0))) };
 
       str_zeros.push_back('0');
-      str_zeros.insert(str_zeros.cbegin(), '0');
+      str_zeros = "0" + str_zeros;
 
       std::string str_local_zero_to_read { str_zeros };
 
-      if(!zero_is_neg) { str_local_zero_to_read.insert(str_local_zero_to_read.cbegin(), '+'); }
-      else             { str_local_zero_to_read.insert(str_local_zero_to_read.cbegin(), '-'); }
+      if(!zero_is_neg) { str_local_zero_to_read = "+" + str_local_zero_to_read; }
+      else             { str_local_zero_to_read = "-" + str_local_zero_to_read;; }
 
       const local_wide_decimal_type val_local_zero_to_read { str_local_zero_to_read.c_str() };
 
