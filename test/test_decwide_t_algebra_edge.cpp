@@ -1186,7 +1186,7 @@ auto test_string_ops_and_round_trips() -> bool
 
     for(auto i = static_cast<unsigned>(UINT8_C(0)); i < static_cast<unsigned>(UINT8_C(16)); ++i)
     {
-      const bool zero_is_neg { ((i % static_cast<unsigned>(UINT8_C(0))) != static_cast<unsigned>(UINT8_C(0))) };
+      const bool zero_is_neg { ((i % static_cast<unsigned>(UINT8_C(2))) != static_cast<unsigned>(UINT8_C(0))) };
 
       str_zeros.push_back('0');
       str_zeros.insert(str_zeros.cbegin(), '0');
