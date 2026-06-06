@@ -1191,10 +1191,12 @@ auto test_string_ops_and_round_trips() -> bool
       str_zeros.push_back('0');
       str_zeros = "0" + str_zeros;
 
-      std::string str_local_zero_to_read { str_zeros };
+      std::string str_local_zero_to_read { };
 
-      if(!zero_is_neg) { str_local_zero_to_read = "+" + str_local_zero_to_read; }
-      else             { str_local_zero_to_read = "-" + str_local_zero_to_read;; }
+      if(!zero_is_neg) { str_local_zero_to_read = "+"; }
+      else             { str_local_zero_to_read = "-"; }
+
+      str_local_zero_to_read += str_zeros;
 
       const local_wide_decimal_type val_local_zero_to_read { str_local_zero_to_read.c_str() };
 
