@@ -1189,7 +1189,7 @@ auto test_string_ops_and_round_trips() -> bool
       const bool zero_is_neg { ((i % static_cast<unsigned>(UINT8_C(2))) != static_cast<unsigned>(UINT8_C(0))) };
 
       str_zeros.push_back('0');
-      str_zeros = "0" + str_zeros;
+      str_zeros.insert(std::size_t { UINT8_C(0) }, std::size_t { UINT8_C(1) }, '0');
 
       std::string str_local_zero_to_read { };
 
