@@ -3400,7 +3400,7 @@
         {
           // The string contains nothing but leading zeros.
           // This string represents zero.
-          static_cast<void>
+          static_cast<void> // LCOV_EXCL_LINE
           (
             operator=(zero<ParamDigitsBaseTen, LimbType, AllocatorType, InternalFloatType, ExponentType, FftFloatType>())
           );

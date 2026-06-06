@@ -672,8 +672,11 @@
 
     constexpr auto operator=(unsigned_wrap&& other) noexcept -> unsigned_wrap&
     {
-      my_neg   = other.my_neg;
-      my_value = other.my_value;
+      if(this != &other)
+      {
+        my_neg   = other.my_neg;
+        my_value = other.my_value;
+      }
 
       return *this;
     }
@@ -750,10 +753,10 @@
 
       return *this;
     }
-  };
 
-  template<typename UnsignedIntegerType, typename SignedIntegerType> constexpr auto operator+(const unsigned_wrap<UnsignedIntegerType, SignedIntegerType>& a, const unsigned_wrap<UnsignedIntegerType, SignedIntegerType>& b) -> unsigned_wrap<UnsignedIntegerType, SignedIntegerType> { return unsigned_wrap<UnsignedIntegerType, SignedIntegerType>(a) += b; }
-  template<typename UnsignedIntegerType, typename SignedIntegerType> constexpr auto operator-(const unsigned_wrap<UnsignedIntegerType, SignedIntegerType>& a, const unsigned_wrap<UnsignedIntegerType, SignedIntegerType>& b) -> unsigned_wrap<UnsignedIntegerType, SignedIntegerType> { return unsigned_wrap<UnsignedIntegerType, SignedIntegerType>(a) -= b; }
+    friend constexpr auto operator+(const unsigned_wrap& a, const unsigned_wrap& b) -> unsigned_wrap { return unsigned_wrap(a) += b; }
+    friend constexpr auto operator-(const unsigned_wrap& a, const unsigned_wrap& b) -> unsigned_wrap { return unsigned_wrap(a) -= b; }
+  };
 
   #if(__cplusplus >= 201703L)
   } // namespace math::wide_decimal::detail

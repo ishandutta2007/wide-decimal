@@ -1,5 +1,5 @@
 ﻿///////////////////////////////////////////////////////////////////
-//  Copyright Christopher Kormanyos 2022 - 2025.                 //
+//  Copyright Christopher Kormanyos 2022 - 2026.                 //
 //  Distributed under the Boost Software License,                //
 //  Version 1.0. (See accompanying file LICENSE_1_0.txt          //
 //  or copy at http://www.boost.org/LICENSE_1_0.txt)             //
@@ -1178,6 +1178,29 @@ auto test_string_ops_and_round_trips() -> bool
            << x;
 
       result_is_ok = ((x == local_wide_decimal_type(strm.str().c_str())) && result_is_ok);
+    }
+  }
+
+  {
+    std::string str_zeros(std::string("000.000000"));
+
+    for(auto i = static_cast<unsigned>(UINT8_C(0)); i < static_cast<unsigned>(UINT8_C(16)); ++i)
+    {
+      const bool zero_is_neg { ((i % static_cast<unsigned>(UINT8_C(0))) != static_cast<unsigned>(UINT8_C(0))) };
+
+      str_zeros.push_back('0');
+      str_zeros.insert(str_zeros.cbegin(), '0');
+
+      std::string str_local_zero_to_read { str_zeros };
+
+      if(!zero_is_neg) { str_local_zero_to_read.insert(str_local_zero_to_read.cbegin(), '+'); }
+      else             { str_local_zero_to_read.insert(str_local_zero_to_read.cbegin(), '-'); }
+
+      const local_wide_decimal_type val_local_zero_to_read { str_local_zero_to_read.c_str() };
+
+      const bool result_str_is_zero { (val_local_zero_to_read == 0) };
+
+      result_is_ok = (result_str_is_zero && result_is_ok);
     }
   }
 
