@@ -88,21 +88,23 @@
       // (TBD) In fact, constant-time allocation probably possible, as shown in:
       // SmallObjectAllocator from Modern C++ Design by Andrei Alexandrescu.
 
+      auto& my_slot_array_memory { slot_array_memory() };
+      auto& my_slot_flags        { slot_flags() };
+      auto& my_slot_max_index    { slot_max_index() };
+
       for(auto i = static_cast<std::size_t>(UINT8_C(0)); i < slot_count; ++i)
       {
         using local_flags_value_type = typename slot_array_flags_type::value_type;
 
-        if(slot_flags[i] == static_cast<local_flags_value_type>(UINT8_C(0))) // NOLINT(cppcoreguidelines-pro-bounds-constant-array-index)
+        if(my_slot_flags[i] == static_cast<local_flags_value_type>(UINT8_C(0))) // NOLINT(cppcoreguidelines-pro-bounds-constant-array-index)
         {
-          slot_flags[i] = static_cast<local_flags_value_type>(UINT8_C(1)); // NOLINT(cppcoreguidelines-pro-bounds-constant-array-index)
+          my_slot_flags[i] = static_cast<local_flags_value_type>(UINT8_C(1)); // NOLINT(cppcoreguidelines-pro-bounds-constant-array-index)
 
-          p = static_cast<pointer>(slot_array_memory[i].data()); // NOLINT(cppcoreguidelines-pro-bounds-constant-array-index)
+          p = static_cast<pointer>(my_slot_array_memory[i].data()); // NOLINT(cppcoreguidelines-pro-bounds-constant-array-index)
 
-          if(i > slot_max_index)
+          if(i > my_slot_max_index)
           {
-            slot_max_index = i;
-
-            static_cast<void>(slot_max_index);
+            my_slot_max_index = i;
           }
 
           break;
@@ -129,13 +131,16 @@
 
       typename slot_array_memory_type::size_type index { };
 
-      for(auto& slot_array_memory_entry : slot_array_memory)
+      auto& my_slot_array_memory { slot_array_memory() };
+      auto& my_slot_flags        { slot_flags() };
+
+      for(auto& mem_entry : my_slot_array_memory)
       {
-        if(p_slot == static_cast<pointer>(slot_array_memory_entry.data()))
+        if(p_slot == static_cast<pointer>(mem_entry.data()))
         {
           using local_flags_value_type = typename slot_array_flags_type::value_type;
 
-          slot_flags[index] = static_cast<local_flags_value_type>(UINT8_C(0)); // NOLINT(cppcoreguidelines-pro-bounds-constant-array-index)
+          my_slot_flags[index] = static_cast<local_flags_value_type>(UINT8_C(0)); // NOLINT(cppcoreguidelines-pro-bounds-constant-array-index)
 
           break;
         }
@@ -145,25 +150,10 @@
     }
 
   private:
-    static slot_array_memory_type slot_array_memory; // NOLINT(cppcoreguidelines-avoid-non-const-global-variables)
-    static slot_array_flags_type  slot_flags;        // NOLINT(cppcoreguidelines-avoid-non-const-global-variables)
-    static std::size_t            slot_max_index;    // NOLINT(cppcoreguidelines-avoid-non-const-global-variables)
+    static slot_array_memory_type& slot_array_memory() { static slot_array_memory_type my_mem_instance; return my_mem_instance; }
+    static slot_array_flags_type&  slot_flags       () { static slot_array_flags_type  my_flg_instance; return my_flg_instance; }
+    static std::size_t&            slot_max_index   () { static std::size_t            my_idx_instance; return my_idx_instance; }
   };
-
-  template<typename T,
-           const std::uint_fast32_t SlotWidth,
-           const std::size_t SlotCount>
-  typename n_slot_array_allocator<T, SlotWidth, SlotCount>::slot_array_memory_type n_slot_array_allocator<T, SlotWidth, SlotCount>::slot_array_memory; // NOLINT(cppcoreguidelines-avoid-non-const-global-variables,hicpp-uppercase-literal-suffix,readability-uppercase-literal-suffix)
-
-  template<typename T,
-           const std::uint_fast32_t SlotWidth,
-           const std::size_t SlotCount>
-  typename n_slot_array_allocator<T, SlotWidth, SlotCount>::slot_array_flags_type n_slot_array_allocator<T, SlotWidth, SlotCount>::slot_flags; // NOLINT(cppcoreguidelines-avoid-non-const-global-variables,hicpp-uppercase-literal-suffix,readability-uppercase-literal-suffix)
-
-  template<typename T,
-           const std::uint_fast32_t SlotWidth,
-           const std::size_t SlotCount>
-  std::size_t n_slot_array_allocator<T, SlotWidth, SlotCount>::slot_max_index; // NOLINT(cppcoreguidelines-avoid-non-const-global-variables,hicpp-uppercase-literal-suffix,readability-uppercase-literal-suffix)
 
   // Global comparison operators (required by the standard).
   template<typename T,

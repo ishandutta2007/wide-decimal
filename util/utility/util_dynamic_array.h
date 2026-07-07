@@ -1,5 +1,5 @@
 ﻿///////////////////////////////////////////////////////////////////////////////
-//  Copyright Christopher Kormanyos 2012 - 2024.
+//  Copyright Christopher Kormanyos 2012 - 2026.
 //  Distributed under the Boost Software License,
 //  Version 1.0. (See accompanying file LICENSE_1_0.txt
 //  or copy at http://www.boost.org/LICENSE_1_0.txt)
@@ -50,12 +50,11 @@
                                      const_reference value_in = value_type(),
                                      const allocator_type& alloc_in = allocator_type())
       : elem_count(count_in),
-        my_alloc(alloc_in)
+        my_alloc(alloc_in),
+        elems(std::allocator_traits<allocator_type>::allocate(my_alloc, elem_count))
     {
       if(elem_count > static_cast<size_type>(UINT8_C(0)))
       {
-        elems = std::allocator_traits<allocator_type>::allocate(my_alloc, elem_count);
-
         iterator it = begin();
 
         while(it != end())
@@ -67,16 +66,25 @@
       }
     }
 
+    // Copy constructor.
     constexpr dynamic_array(const dynamic_array& other)
       : elem_count(other.elem_count),
-        my_alloc(other.my_alloc)
+        my_alloc(other.my_alloc),
+        elems(std::allocator_traits<allocator_type>::allocate(my_alloc, elem_count))
     {
       if(elem_count > static_cast<size_type>(UINT8_C(0)))
       {
-        elems = std::allocator_traits<allocator_type>::allocate(my_alloc, elem_count);
-
         std::copy(other.elems, other.elems + elem_count, elems);
       }
+    }
+
+    // Move constructor.
+    constexpr dynamic_array(dynamic_array&& other) noexcept : elem_count(other.elem_count),
+                                                              my_alloc  (std::move(static_cast<allocator_type&&>(other.my_alloc))),
+                                                              elems     (other.elems)
+    {
+      other.elem_count = static_cast<size_type>(UINT8_C(0));
+      other.elems      = nullptr;
     }
 
     template<typename InputIterator>
@@ -84,12 +92,11 @@
                             InputIterator last,
                             const allocator_type& alloc_in = allocator_type())
       : elem_count(static_cast<size_type>(std::distance(first, last))),
-        my_alloc(alloc_in)
+        my_alloc(alloc_in),
+        elems(std::allocator_traits<allocator_type>::allocate(my_alloc, elem_count))
     {
       if(elem_count > static_cast<size_type>(UINT8_C(0)))
       {
-        elems = std::allocator_traits<allocator_type>::allocate(my_alloc, elem_count);
-
         std::copy(first, last, elems);
       }
     }
@@ -97,23 +104,13 @@
     constexpr dynamic_array(std::initializer_list<value_type> lst,
                             const allocator_type& alloc_in = allocator_type())
       : elem_count(lst.size()),
-        my_alloc(alloc_in)
+        my_alloc(alloc_in),
+        elems(std::allocator_traits<allocator_type>::allocate(my_alloc, elem_count))
     {
       if(elem_count > static_cast<size_type>(UINT8_C(0)))
       {
-        elems = std::allocator_traits<allocator_type>::allocate(my_alloc, elem_count);
-
         std::copy(lst.begin(), lst.end(), elems);
       }
-    }
-
-    // Move constructor.
-    constexpr dynamic_array(dynamic_array&& other) noexcept : elem_count(other.elem_count),
-                                                              elems     (other.elems),
-                                                              my_alloc  (std::move(static_cast<allocator_type&&>(other.my_alloc)))
-    {
-      other.elem_count = static_cast<size_type>(UINT8_C(0));
-      other.elems      = nullptr;
     }
 
     // Destructor.
@@ -234,8 +231,8 @@
 
   private:
     size_type      elem_count { static_cast<size_type>(UINT8_C(0)) }; // NOLINT(readability-identifier-naming)
+    allocator_type my_alloc   { };                                    // NOLINT(readability-identifier-naming)
     pointer        elems      { nullptr };                            // NOLINT(readability-identifier-naming,altera-id-dependent-backward-branch)
-    allocator_type my_alloc;                                          // NOLINT(readability-identifier-naming)
 
     friend constexpr auto operator==(const dynamic_array& lhs, const dynamic_array& rhs) -> bool
     {

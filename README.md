@@ -37,7 +37,7 @@ Wide-decimal implements both elementary algebraic operations as well as
 a few common `<cmath>`-like functions such as `fabs`, `sqrt` and `log`.
 It also includes full support for `std::numeric_limits`.
 
-Wide-decimal is written in header-only C++20, and compatible through C++20, 23 and beyond.
+Wide-decimal is written in header-only C++14, and compatible through C++14, 17, 20, 23 and beyond.
 
 ## Implementation goals
 
