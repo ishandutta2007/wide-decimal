@@ -150,9 +150,9 @@
     }
 
   private:
-    static slot_array_memory_type& slot_array_memory() { static slot_array_memory_type my_mem_instance; return my_mem_instance; }
-    static slot_array_flags_type&  slot_flags       () { static slot_array_flags_type  my_flg_instance; return my_flg_instance; }
-    static std::size_t&            slot_max_index   () { static std::size_t            my_idx_instance; return my_idx_instance; }
+    static auto slot_array_memory() -> slot_array_memory_type& { static slot_array_memory_type my_mem_instance; return my_mem_instance; }
+    static auto slot_flags       () -> slot_array_flags_type&  { static slot_array_flags_type  my_flg_instance; return my_flg_instance; }
+    static auto slot_max_index   () -> std::size_t&            { static std::size_t            my_idx_instance; return my_idx_instance; }
   };
 
   // Global comparison operators (required by the standard).

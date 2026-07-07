@@ -45,7 +45,7 @@ Wide-decimal is written in header-only C++14, and compatible through C++14, 17, 
   - Relatively wide precision range from about ${\sim}~10 {\ldots} 10^{7}$ decimal digits.
   - Moderately good efficiency over the entire wide precision range.
   - Clean header-only C++14 design.
-  - Seamless portability to any modern C++20, 23 compiler and beyond.
+  - Seamless portability to any modern C++14, 17, 20, 23 compiler and beyond.
   - Scalability with small memory footprint and efficiency suitable for both PC/workstation systems as well as _bare-metal_ embedded systems.
 
 ## Quick start
