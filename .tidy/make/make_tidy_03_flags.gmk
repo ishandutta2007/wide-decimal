@@ -22,8 +22,6 @@ STD                 := $(MY_STD)
 endif
 
 CXX_FLAGS    = $(CC)                                                           \
-               -march=native                                                   \
-               -mtune=native                                                   \
                -O3                                                             \
                -Wall                                                           \
                -Wextra                                                         \
